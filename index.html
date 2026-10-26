@@ -3,34 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0f766e">
+<meta name="theme-color" content="#ff9a9e">
 <title>Sneha & Akhil Thailand Trip · 28 Oct – 6 Nov 2026</title>
 <style>
   :root{
-    --bg:#f6f7f8;--card:#fff;--text:#1a1d21;--muted:#5f6b76;--line:#e3e7ea;
-    --accent:#0f766e;--accent-soft:#d9f1ee;--now:#b45309;--now-soft:#fff1d6;
-    --next:#1d4ed8;--next-soft:#dbe7ff;--done:#9aa3ab;
-    --flight:#7c3aed;--hotel:#0e7490;--food:#c2410c;--tour:#15803d;--move:#475569;--sight:#a16207;
-  }
-  @media (prefers-color-scheme:dark){
-    :root{--bg:#0f1316;--card:#171c21;--text:#e6e9ec;--muted:#98a2ab;--line:#2a3138;
-      --accent:#2dd4bf;--accent-soft:#113b37;--now:#fbbf24;--now-soft:#3a2a08;
-      --next:#60a5fa;--next-soft:#14274d;--done:#5b656e;}
+    --bg:#fad0c4;--card:rgba(255,255,255,.38);--text:#522b3a;--muted:#765d69;--line:rgba(255,255,255,.7);
+    --accent:#c85c7a;--accent-soft:rgba(255,255,255,.52);--now:#b45309;--now-soft:rgba(255,241,214,.8);
+    --next:#9b4d86;--next-soft:rgba(251,194,235,.65);--done:#aa8d99;
+    --flight:#8b5aa8;--hotel:#6d849e;--food:#c56d52;--tour:#70966e;--move:#7b7184;--sight:#b4864a;
   }
   *{box-sizing:border-box}
-  body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+  button,input,select{font-family:inherit}
+  body{margin:0;font:15px/1.5 Georgia,serif;background:linear-gradient(135deg,#ff9a9e,#fad0c4 45%,#fbc2eb) fixed;color:var(--text)}
   a{color:var(--accent)}
-  header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--line)}
+  header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.42);border-bottom:1px solid var(--line);backdrop-filter:blur(14px);box-shadow:0 10px 28px rgba(130,55,100,.12)}
   .bar{max-width:960px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .bar h1{font-size:17px;margin:0;flex:1;min-width:180px}
+  .bar h1{font-size:18px;margin:0;flex:1;min-width:180px;color:#6b304d}
   .clock{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px}
   nav{max-width:960px;margin:0 auto;padding:0 8px 8px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
   nav::-webkit-scrollbar{display:none}
-  nav button{border:1px solid var(--line);background:transparent;color:var(--text);padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;font-size:13px}
+  nav button{border:1px solid var(--line);background:rgba(255,255,255,.25);color:var(--text);padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;font-size:13px;font-family:inherit}
   nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-  main{max-width:960px;margin:0 auto;padding:14px}
+  main{max-width:960px;margin:0 auto;padding:20px 14px}
   section.tab{display:none}section.tab.active{display:block}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:16px;box-shadow:0 14px 34px rgba(130,55,100,.12);backdrop-filter:blur(10px)}
   .muted{color:var(--muted)}
   .small{font-size:13px}
   h2{font-size:18px;margin:0 0 10px}h3{font-size:15px;margin:16px 0 6px}
@@ -52,7 +48,7 @@
 
   /* days */
   .day{margin-bottom:18px}
-  .dayhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:6px 2px;position:sticky;top:94px;background:var(--bg);z-index:5}
+  .dayhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:8px 8px;position:sticky;top:94px;background:rgba(250,208,196,.72);backdrop-filter:blur(8px);z-index:5;border-radius:12px}
   .dayhead h2{margin:0}
   .dayhead .base{color:var(--muted);font-size:13px}
   .dayhead.today h2::after{content:"TODAY";margin-left:8px;font-size:10px;background:var(--now);color:#fff;padding:2px 6px;border-radius:4px;vertical-align:middle}
