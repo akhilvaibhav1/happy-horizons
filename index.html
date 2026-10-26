@@ -1,41 +1,732 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Welcome, Sneha &amp; Akhil</title>
-	<style>
-		* { box-sizing: border-box; }
-		body {
-			margin: 0;
-			min-height: 100vh;
-			display: grid;
-			place-items: center;
-			font-family: Georgia, serif;
-			color: #fff;
-			background: linear-gradient(135deg, #ff9a9e, #fad0c4 45%, #fbc2eb);
-		}
-		.card {
-			width: min(90%, 620px);
-			padding: 4rem 2rem;
-			text-align: center;
-			border: 1px solid rgba(255,255,255,.55);
-			border-radius: 28px;
-			background: rgba(255,255,255,.2);
-			box-shadow: 0 20px 50px rgba(130, 55, 100, .2);
-			backdrop-filter: blur(10px);
-		}
-		.heart { font-size: 3rem; animation: pulse 1.6s infinite; }
-		h1 { margin: .4rem 0 1rem; font-size: clamp(2.2rem, 8vw, 4.5rem); }
-		p { margin: 0; font-size: 1.25rem; line-height: 1.6; }
-		@keyframes pulse { 50% { transform: scale(1.15); } }
-	</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f766e">
+<title>Sneha & Akhil Thailand Trip · 28 Oct – 6 Nov 2026</title>
+<style>
+  :root{
+    --bg:#f6f7f8;--card:#fff;--text:#1a1d21;--muted:#5f6b76;--line:#e3e7ea;
+    --accent:#0f766e;--accent-soft:#d9f1ee;--now:#b45309;--now-soft:#fff1d6;
+    --next:#1d4ed8;--next-soft:#dbe7ff;--done:#9aa3ab;
+    --flight:#7c3aed;--hotel:#0e7490;--food:#c2410c;--tour:#15803d;--move:#475569;--sight:#a16207;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f1316;--card:#171c21;--text:#e6e9ec;--muted:#98a2ab;--line:#2a3138;
+      --accent:#2dd4bf;--accent-soft:#113b37;--now:#fbbf24;--now-soft:#3a2a08;
+      --next:#60a5fa;--next-soft:#14274d;--done:#5b656e;}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+  a{color:var(--accent)}
+  header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--line)}
+  .bar{max-width:960px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .bar h1{font-size:17px;margin:0;flex:1;min-width:180px}
+  .clock{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px}
+  nav{max-width:960px;margin:0 auto;padding:0 8px 8px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{border:1px solid var(--line);background:transparent;color:var(--text);padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;font-size:13px}
+  nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  main{max-width:960px;margin:0 auto;padding:14px}
+  section.tab{display:none}section.tab.active{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+  h2{font-size:18px;margin:0 0 10px}h3{font-size:15px;margin:16px 0 6px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+  code{background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:13px}
+  .pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:600;color:#fff;vertical-align:middle}
+
+  /* status banner */
+  .status{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.status{grid-template-columns:1fr}}
+  .status .box{padding:12px 14px;border-radius:10px}
+  .status .now-box{background:var(--now-soft);border-left:4px solid var(--now)}
+  .status .next-box{background:var(--next-soft);border-left:4px solid var(--next)}
+  .status .label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  .status .title{font-weight:600;margin:3px 0}
+  .countdown{font-variant-numeric:tabular-nums;font-weight:700}
+
+  /* days */
+  .day{margin-bottom:18px}
+  .dayhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:6px 2px;position:sticky;top:94px;background:var(--bg);z-index:5}
+  .dayhead h2{margin:0}
+  .dayhead .base{color:var(--muted);font-size:13px}
+  .dayhead.today h2::after{content:"TODAY";margin-left:8px;font-size:10px;background:var(--now);color:#fff;padding:2px 6px;border-radius:4px;vertical-align:middle}
+  .dayhead.past h2{color:var(--done)}
+  .ev{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:10px 12px;border-left:3px solid var(--line);margin-left:6px;position:relative}
+  .ev.past{opacity:.55}
+  .ev.now{background:var(--now-soft);border-left-color:var(--now);border-radius:0 10px 10px 0}
+  .ev.next{background:var(--next-soft);border-left-color:var(--next);border-radius:0 10px 10px 0}
+  .ev .time{font-weight:700;font-variant-numeric:tabular-nums;font-size:14px}
+  .ev .time small{display:block;font-weight:400;color:var(--muted);font-size:11px}
+  .ev .ttl{font-weight:600}
+  .ev .det{color:var(--muted);font-size:13.5px;margin-top:2px}
+  .ev .det b{color:var(--text)}
+  .ev .leg{font-size:12px;color:var(--muted);margin-top:4px}
+  .ev .leg a{text-decoration:none}
+  .ev .flag{position:absolute;right:10px;top:8px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  .ev.now .flag{color:var(--now)}.ev.next .flag{color:var(--next)}
+  .daynote{margin:8px 0 0 9px;padding:8px 12px;border-left:3px dashed var(--line);font-size:13.5px;color:var(--muted)}
+  .alt{margin:8px 0 0 9px;padding:8px 12px;font-size:13.5px;background:var(--accent-soft);border-radius:8px}
+
+  /* routes */
+  .route-grp h3{margin-top:18px}
+  .mapbtn{font-size:12px;text-decoration:none;border:1px solid var(--line);padding:2px 8px;border-radius:6px;white-space:nowrap}
+
+  /* tasks */
+  .tform{display:flex;gap:8px;flex-wrap:wrap}
+  .tform input,.tform select{padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:15px}
+  .tform input{flex:1;min-width:200px}
+  .tprog{display:flex;align-items:center;gap:10px;margin:12px 0 6px;font-size:13px;color:var(--muted)}
+  .tprog .track{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+  .tprog .track span{display:block;height:100%;background:var(--accent)}
+  .tgroup{margin-bottom:12px}
+  .tgroup h3{display:flex;align-items:center;gap:8px;margin:0 0 4px}
+  .tgroup h3 .cnt{font-weight:400;color:var(--muted);font-size:13px}
+  .task{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
+  .task input[type=checkbox]{width:18px;height:18px;margin-top:3px}
+  .task .txt{cursor:text;word-break:break-word}
+  .task.done .txt{text-decoration:line-through;color:var(--done)}
+  .task .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px;font-size:11.5px}
+  .task .meta .due{padding:1px 7px;border-radius:999px;background:var(--line);color:var(--muted)}
+  .task .meta .due.soon{background:var(--next-soft);color:var(--next)}
+  .task .meta .due.late{background:var(--now-soft);color:var(--now);font-weight:600}
+  .task .acts{display:flex;gap:2px}
+  .task .acts button{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px}
+  .task .acts button:hover{background:var(--line);color:var(--text)}
+  .task.editing{grid-template-columns:1fr}
+  .tedit{display:grid;gap:8px}
+  .tedit input,.tedit select{padding:8px 10px;border-radius:8px;border:1px solid var(--accent);background:var(--bg);color:var(--text);font-size:14px}
+  .tedit .row{display:flex;gap:8px;flex-wrap:wrap}
+  .tedit .row button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px}
+  .tedit .row button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tdone-toggle{font-size:13px;color:var(--muted);cursor:pointer;background:none;border:0;padding:4px 0}
+
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;font-size:13px}
+  .controls button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}
+  .warn{background:var(--now-soft);border-left:4px solid var(--now);padding:8px 12px;border-radius:8px;font-size:13.5px}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+
+  /* expenses */
+  .xform{display:grid;gap:10px}
+  .xrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .xform input,.xform select{padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:15px}
+  .xform input.amt{font-size:22px;font-weight:700;width:150px;font-variant-numeric:tabular-nums}
+  .xform input.note{flex:1;min-width:160px}
+  .xform .cur{border:1px solid var(--line);border-radius:8px;overflow:hidden;display:inline-flex}
+  .xform .cur button{border:0;background:transparent;color:var(--text);padding:9px 12px;cursor:pointer;font-weight:600}
+  .xform .cur button.active{background:var(--accent);color:#fff}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+  .chips button i{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .chips button.active{border-color:var(--text);box-shadow:inset 0 0 0 1px var(--text)}
+  .addbtn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-weight:700;font-size:15px;cursor:pointer}
+  .addbtn:disabled{opacity:.4;cursor:default}
+  .grand{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .grand .kpi{padding:10px 12px;border-radius:10px;background:var(--accent-soft)}
+  .grand .kpi .label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+  .grand .kpi .val{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+  .grand .kpi .sub{font-size:12px;color:var(--muted)}
+  .bar-stack{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--line);margin:8px 0 6px}
+  .bar-stack span{display:block;height:100%}
+  .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
+  .legend i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}
+  .budget-bar{height:14px;border-radius:7px;background:var(--line);overflow:hidden;margin-top:6px;position:relative}
+  .budget-bar span{display:block;height:100%;background:var(--accent)}
+  .budget-bar.over span{background:var(--now)}
+  .xday{margin-bottom:12px}
+  .xday .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .xday .hd h3{margin:0}
+  .xday .tot{font-weight:700;font-variant-numeric:tabular-nums}
+  .xday .tot small{font-weight:400;color:var(--muted)}
+  .xitem{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
+  .xitem .cat{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap}
+  .xitem .amt{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .xitem .amt small{font-weight:400;color:var(--muted);display:block;font-size:11px;text-align:right}
+  .xitem .del{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px}
+  .xitem .del:hover{color:var(--now)}
+  .xitem .note{overflow:hidden;text-overflow:ellipsis}
+  .xitem .note small{color:var(--muted);margin-left:6px}
+  .xday details summary{cursor:pointer;color:var(--muted);font-size:13px;list-style:none;margin-top:6px}
+  .xday details summary::before{content:"▸ "}.xday details[open] summary::before{content:"▾ "}
+  .emptymsg{color:var(--muted);text-align:center;padding:20px}
+  .xtools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .xtools button,.xtools label{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}
+  .xtools input{display:none}
+</style>
 </head>
 <body>
-	<main class="card">
-		<div class="heart" aria-hidden="true">♡</div>
-		<h1>Welcome, Sneha &amp; Akhil!</h1>
-		<p>May your journey together be filled with love, laughter, and countless happy moments.</p>
-	</main>
+<header>
+  <div class="bar">
+    <h1>Sneha & Akhil Thailand Trip · 28 Oct – 6 Nov 2026</h1>
+    <div class="clock" id="clock"></div>
+  </div>
+  <nav id="nav">
+    <button data-tab="plan" class="active">Day by day</button>
+    <button data-tab="routes">Distances</button>
+    <button data-tab="bookings">Bookings</button>
+    <button data-tab="expenses">Expenses</button>
+    <button data-tab="todo">To-do</button>
+    <button data-tab="budget">Budget</button>
+    <button data-tab="notes">Notes</button>
+  </nav>
+</header>
+
+<main>
+  <div class="card status" id="status"></div>
+
+  <section class="tab active" id="tab-plan">
+    <div class="controls">
+      <button id="jumpNow">Jump to now</button>
+      <label><input type="checkbox" id="hidePast"> Hide past days</label>
+      <span class="muted" id="simNote"></span>
+    </div>
+    <div id="days"></div>
+  </section>
+
+  <section class="tab" id="tab-routes">
+    <div class="card">
+      <h2>Distances &amp; travel times</h2>
+      <p class="muted small">Approximate road/boat figures for planning. Tap <b>Map</b> for live Google Maps directions from your current position or between the two places.</p>
+      <div id="routes"></div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-bookings">
+    <div class="card">
+      <h2>Flights</h2>
+      <table><thead><tr><th>Date</th><th>Route</th><th>Flight</th><th>Times</th><th>PNR</th><th>Baggage</th></tr></thead><tbody>
+        <tr><td>Wed 28 Oct</td><td>MAA → KUL</td><td>AirAsia AK 10</td><td>08:05 → 14:35</td><td><code>OG2QPT</code></td><td><b>cabin 7 kg only</b></td></tr>
+        <tr><td>Wed 28 Oct</td><td>KUL → HKT</td><td>AirAsia AK 826</td><td>17:50 → 18:30</td><td><code>OG2QPT</code></td><td><b>cabin 7 kg only</b></td></tr>
+        <tr><td>Mon 2 Nov</td><td>KBV → BKK</td><td>Thai Vietjet VZ345</td><td>20:45 → 22:10</td><td><code>VB4WTE</code></td><td><b>none included</b></td></tr>
+        <tr><td>Fri 6 Nov</td><td>BKK → MAA</td><td>IndiGo 6E-1062</td><td>10:15 → 12:25</td><td><code>NEEGFQ</code></td><td>20 kg + 7 kg</td></tr>
+      </tbody></table>
+      <p class="small muted">Layover at KUL T2 is 3h 15m — same terminal, same airline, airside on one PNR (no Malaysian visa).</p>
+    </div>
+    <div class="card">
+      <h2>Stays</h2>
+      <table><thead><tr><th>Nights</th><th>Hotel</th><th>Area</th><th>Ref</th><th>In / Out</th></tr></thead><tbody>
+        <tr><td>28–31 Oct (3)</td><td>ibis Styles Phuket City</td><td>Phuket Old Town</td><td><code>QRRSKHVD</code></td><td>15:00 / 12:00</td></tr>
+        <tr><td>31 Oct–2 Nov (2)</td><td>ibis Styles Krabi Ao Nang</td><td>Ao Nang</td><td><code>QRRSKLWW</code></td><td>14:00 / 12:00</td></tr>
+        <tr><td>2–4 Nov (2)</td><td>Holiday Inn Express &amp; Suites</td><td>193 South Sathon Rd, Sathorn</td><td><code>25348654</code></td><td>15:00 / 12:00</td></tr>
+        <tr><td>4–5 Nov (1)</td><td>Holiday Inn Express</td><td>30 Sukhumvit Soi 11</td><td><code>84021615</code></td><td>15:00 / 12:00</td></tr>
+        <tr><td>5–6 Nov (1)</td><td>ibis Bangkok Sukhumvit 4</td><td>41 Sukhumvit Soi 4</td><td><code>QSJSCXZS</code></td><td>14:00 / 12:00</td></tr>
+      </tbody></table>
+      <p class="small muted">Soi 11 and Soi 4 are both ~5 min walk from <b>BTS Nana</b> and ~8 min from each other. Only the Nov 4 Sathorn → Nana move needs a taxi / two BTS stops.<br>ibis Bangkok Sukhumvit 4: <a href="tel:+6626675888">+66 2 667 5888</a></p>
+    </div>
+    <div class="card">
+      <h2>Travellers</h2>
+      <p>Akhil Vaibhav Madala + Sneha Sappa (2 adults). Indian passports — 60-day visa exemption, 6+ months validity required. Carry proof of onward travel (6 Nov IndiGo ticket).</p>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-expenses">
+    <div class="card">
+      <h2>Add expense</h2>
+      <form class="xform" id="xform" autocomplete="off">
+        <div class="xrow">
+          <input class="amt" id="xAmt" type="number" inputmode="decimal" step="any" min="0" placeholder="0" required>
+          <div class="cur" id="xCur"><button type="button" data-cur="THB" class="active">THB</button><button type="button" data-cur="INR">₹</button></div>
+          <span class="muted small" id="xConv"></span>
+        </div>
+        <div class="chips" id="xCats"></div>
+        <div class="xrow">
+          <input class="note" id="xNote" type="text" placeholder="Note (e.g. Phi Phi park fee ×2)" maxlength="80">
+          <select id="xDay"></select>
+          <button class="addbtn" type="submit" id="xAdd">Add</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Totals</h2>
+      <div id="xGrand"></div>
+    </div>
+    <div id="xDays"></div>
+    <div class="card">
+      <div class="xtools">
+        <button type="button" id="xExport">Export CSV</button>
+        <button type="button" id="xBackup">Backup JSON</button>
+        <label>Restore JSON <input type="file" id="xRestore" accept="application/json"></label>
+      </div>
+      <p class="small muted" style="margin:8px 0 0">Expenses are stored only in this browser. Back up occasionally — especially before clearing site data or switching phones.</p>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-todo">
+    <div class="card">
+      <h2>Add task</h2>
+      <form class="tform" id="tform" autocomplete="off">
+        <input id="tText" type="text" placeholder="What needs doing?" maxlength="200" required>
+        <select id="tCat"></select>
+        <select id="tDue"></select>
+        <button class="addbtn" type="submit">Add</button>
+      </form>
+    </div>
+    <div class="card">
+      <div class="tprog"><span id="tCount"></span><div class="track"><span id="tBar"></span></div></div>
+      <div class="chips" id="tFilter"></div>
+      <div id="tasks" style="margin-top:12px"></div>
+      <div class="xtools" style="margin-top:14px">
+        <button type="button" id="tClearDone">Clear completed</button>
+        <button type="button" id="tReseed">Re-add default gaps</button>
+      </div>
+      <p class="small muted" style="margin:8px 0 0">Tap a task's text to edit it. Tasks are saved on this device (included in the Expenses tab's JSON backup).</p>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-budget">
+    <div class="card">
+      <h2>Rough budget beyond what's paid</h2>
+      <p class="small muted">1 THB ≈ ₹2.85 · 2 pax</p>
+      <table><thead><tr><th>Item</th><th>THB</th><th>₹ approx</th></tr></thead><tbody>
+        <tr><td>Baggage add-ons (AirAsia + Vietjet)</td><td>2,500–4,000</td><td>7,000–11,500</td></tr>
+        <tr><td>Airport transfers (HKT, BKK ×2)</td><td>2,200</td><td>6,300</td></tr>
+        <tr><td>Phuket → Ao Nang transfer</td><td>3,000</td><td>8,500</td></tr>
+        <tr><td>Phi Phi tour + park fee</td><td>4,000–5,800</td><td>11,500–16,500</td></tr>
+        <tr><td>Phuket island day car hire</td><td>1,800</td><td>5,100</td></tr>
+        <tr><td>Krabi 4-islands + park fee + Railay</td><td>2,400–3,400</td><td>6,800–9,700</td></tr>
+        <tr><td>Krabi Nov 2 car for the day</td><td>2,800</td><td>8,000</td></tr>
+        <tr><td>Bangkok temples + entries</td><td>2,000</td><td>5,700</td></tr>
+        <tr><td>Bangkok day trip (Option A or B)</td><td>2,800</td><td>8,000</td></tr>
+        <tr><td>Food (9 days, mid-range)</td><td>13,000–18,000</td><td>37,000–51,000</td></tr>
+        <tr><td>Local transport in Bangkok</td><td>1,500</td><td>4,300</td></tr>
+        <tr><td>Massages, drinks, buffer</td><td>5,000</td><td>14,300</td></tr>
+        <tr><th>Total</th><th>43,000–53,000</th><th>₹1.22–1.51 lakh</th></tr>
+      </tbody></table>
+      <h3>THB → ₹ quick converter</h3>
+      <p><input id="thb" type="number" inputmode="decimal" placeholder="THB" style="width:120px;padding:6px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--text)"> = <b id="inr">₹0</b></p>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-notes">
+    <div class="card">
+      <h2>Practical notes</h2>
+      <ul>
+        <li><b>SIM:</b> buy a tourist eSIM before flying (AIS or dtac, ~THB 300–500 for 8–15 days unlimited).</li>
+        <li><b>Cash:</b> island tours, longtails, songthaews, street food and park fees are cash-only. ATM fee is THB 220 per withdrawal — withdraw big. Carry THB 8,000–10,000.</li>
+        <li><b>Grab</b> works in Bangkok and Phuket; patchy in Ao Nang (songthaews / hotel cars).</li>
+        <li><b>Temple dress:</b> shoulders and knees covered for Grand Palace, Wat Phra Kaew, Wat Pho. Pack long trousers + light scarf each.</li>
+        <li><b>Weather:</b> Phuket/Krabi is monsoon-to-high-season transition — short heavy showers, keep island days flexible. Bangkok should be dry, 32–33°C.</li>
+        <li><b>Reconfirm Vietjet VZ345</b> 24h before; check in online with <code>VB4WTE</code>.</li>
+        <li><b>Scams:</b> anyone outside the Grand Palace saying it's closed is lying. Use metered taxis or Grab.</li>
+        <li><b>VAT refund:</b> purchases over THB 2,000 from "VAT Refund for Tourists" shops — get P.P.10 stamped at customs <i>before</i> check-in at BKK, claim after immigration. +30 min.</li>
+        <li><b>Hotel phone:</b> ibis Bangkok Sukhumvit 4 — <a href="tel:+6626675888">+66 2 667 5888</a></li>
+      </ul>
+      <h3>Testing the "now" highlight</h3>
+      <p class="small muted">Append <code>?now=2026-10-30T15:00</code> (Thailand time) to the URL to simulate a moment in the trip.</p>
+    </div>
+  </section>
+</main>
+<footer>Times are local to where you'll be (IST for Chennai, ICT for Thailand). Source: Detailed_Itinerary.md</footer>
+
+<script>
+// ---------- Data ----------
+const TH = '+07:00', IN = '+05:30';
+const TAGS = {flight:'Flight',hotel:'Hotel',food:'Food',tour:'Tour',move:'Transfer',sight:'Sight'};
+
+// legs: {from,to,km,time,mode}  — referenced from events by key
+const LEGS = {
+  maa_hkt:   {from:'Chennai MAA',to:'Phuket HKT via KUL',km:'~3,900 km',time:'10h 25m incl. 3h15 layover',mode:'flight'},
+  hkt_oldtown:{from:'Phuket Airport (HKT)',to:'ibis Styles Phuket City',km:'32 km',time:'45–60 min',mode:'Grab THB 700–850 / taxi 800–1,000'},
+  oldtown_romanee:{from:'ibis Styles Phuket City',to:'Soi Romanee / Thalang Rd',km:'0.8 km',time:'10 min walk',mode:'walk'},
+  oldtown_rassada:{from:'ibis Styles Phuket City',to:'Rassada Pier',km:'3 km',time:'10 min',mode:'tour pickup'},
+  oldtown_chillva:{from:'ibis Styles Phuket City',to:'Chillva Market',km:'3 km',time:'10 min',mode:'Grab'},
+  oldtown_khaorang:{from:'Phuket Old Town',to:'Khao Rang viewpoint',km:'2 km',time:'25 min walk / Grab THB 80',mode:'walk/Grab'},
+  oldtown_chalong:{from:'Phuket Old Town',to:'Wat Chalong',km:'9 km',time:'20 min',mode:'car'},
+  chalong_bigbuddha:{from:'Wat Chalong',to:'Big Buddha',km:'6 km',time:'15 min (steep road)',mode:'car'},
+  bigbuddha_karon:{from:'Big Buddha',to:'Karon viewpoint',km:'10 km',time:'25 min',mode:'car'},
+  karon_promthep:{from:'Karon viewpoint',to:'Promthep Cape',km:'7 km',time:'15 min',mode:'car'},
+  promthep_rawai:{from:'Promthep Cape',to:'Rawai seafood market',km:'4 km',time:'10 min',mode:'car'},
+  rawai_oldtown:{from:'Rawai',to:'Phuket Old Town',km:'17 km',time:'35 min',mode:'car'},
+  oldtown_patong:{from:'Phuket Old Town',to:'Patong / Bangla Rd',km:'15 km',time:'40–45 min',mode:'Grab THB 400–500'},
+  oldtown_kata:{from:'Phuket Old Town',to:'Kata / Karon beach',km:'17 km',time:'30 min each way',mode:'Grab'},
+  phuket_aonang:{from:'Phuket Old Town',to:'Ao Nang (Krabi)',km:'~165 km',time:'~3h door to door',mode:'private car THB 2,800–3,500'},
+  aonang_pier:{from:'ibis Styles Krabi Ao Nang',to:'Ao Nang beach / pier',km:'0.5 km',time:'7 min walk',mode:'walk'},
+  aonang_kruathara:{from:'Ao Nang',to:'Krua Thara (Ao Nam Mao)',km:'6 km',time:'10 min',mode:'taxi'},
+  aonang_railay:{from:'Ao Nang pier',to:'Railay West',km:'~4 km by sea',time:'15 min',mode:'longtail THB 100 pp'},
+  aonang_tiger:{from:'Ao Nang',to:'Tiger Cave Temple (Wat Tham Suea)',km:'28 km',time:'40 min',mode:'car'},
+  tiger_krabitown:{from:'Tiger Cave Temple',to:'Krabi Town (Thara Park)',km:'9 km',time:'15 min',mode:'car'},
+  krabitown_kbv:{from:'Krabi Town',to:'Krabi Airport (KBV)',km:'14 km',time:'20 min',mode:'car'},
+  tiger_kbv:{from:'Tiger Cave Temple',to:'Krabi Airport (KBV)',km:'10 km',time:'15 min',mode:'car'},
+  aonang_kbv:{from:'Ao Nang',to:'Krabi Airport (KBV)',km:'35 km',time:'45 min',mode:'car'},
+  kbv_bkk:{from:'Krabi KBV',to:'Bangkok BKK',km:'~650 km',time:'1h 25m',mode:'flight VZ345'},
+  bkk_sathorn:{from:'Suvarnabhumi (BKK)',to:'Holiday Inn Express Sathorn',km:'~35 km',time:'40–60 min at night',mode:'taxi THB 400–500 + 75 tolls + 50 surcharge · Grab 550–700'},
+  sathorn_taksin:{from:'Holiday Inn Express Sathorn',to:'BTS Saphan Taksin',km:'2 km',time:'BTS Surasak/Saint Louis → Saphan Taksin, 2 stops',mode:'BTS'},
+  taksin_thachang:{from:'Saphan Taksin pier',to:'Tha Chang pier (Grand Palace)',km:'~5 km by river',time:'25–30 min',mode:'Chao Phraya Express, orange flag THB 16'},
+  palace_watpho:{from:'Grand Palace',to:'Wat Pho',km:'0.8 km',time:'10 min walk',mode:'walk'},
+  watpho_arun:{from:'Wat Pho (Tha Tien)',to:'Wat Arun',km:'river crossing',time:'5 min',mode:'ferry THB 5'},
+  arun_yaowarat:{from:'Wat Arun / Tha Tien',to:'Yaowarat (Chinatown)',km:'4 km',time:'20 min',mode:'taxi / MRT Sanam Chai → Wat Mangkon'},
+  yaowarat_sathorn:{from:'Yaowarat',to:'Holiday Inn Express Sathorn',km:'6 km',time:'~25 min',mode:'taxi'},
+  taksin_iconsiam:{from:'Saphan Taksin',to:'ICONSIAM / Asiatique',km:'river',time:'10–15 min',mode:'free shuttle boat'},
+  sathorn_lumphini:{from:'Holiday Inn Express Sathorn',to:'Lumphini Park',km:'1.5 km',time:'15 min walk',mode:'walk'},
+  sathorn_soi11:{from:'Holiday Inn Express Sathorn',to:'Holiday Inn Express Sukhumvit 11',km:'8 km',time:'~20 min',mode:'taxi THB 150 · BTS Surasak → Nana'},
+  nana_siam:{from:'BTS Nana',to:'BTS Siam (Paragon/MBK)',km:'3 km',time:'~8 min, 3 stops',mode:'BTS'},
+  nana_asok:{from:'BTS Nana',to:'BTS Asok (Terminal 21)',km:'1 km',time:'1 stop',mode:'BTS'},
+  nana_thonglo:{from:'BTS Nana',to:'Octave, Marriott Sukhumvit 57 (BTS Thong Lo)',km:'5 km',time:'4 stops, ~10 min',mode:'BTS'},
+  soi11_soi4:{from:'Holiday Inn Express Sukhumvit 11',to:'ibis Bangkok Sukhumvit 4',km:'0.65 km',time:'8 min walk',mode:'walk'},
+  nana_benjakitti:{from:'BTS Nana',to:'Benjakitti Park',km:'1.5 km',time:'10 min',mode:'walk / BTS Asok'},
+  bkk_maeklong:{from:'Bangkok (Sukhumvit)',to:'Maeklong Railway Market',km:'~80 km',time:'1.5 h',mode:'tour van'},
+  maeklong_damnoen:{from:'Maeklong',to:'Damnoen Saduak floating market',km:'~30 km',time:'40 min',mode:'tour van'},
+  bkk_ayutthaya:{from:'Bangkok',to:'Ayutthaya',km:'~80 km',time:'1.5 h',mode:'train from Krung Thep Aphiwat THB 20–350 / tour'},
+  soi4_bkk:{from:'ibis Bangkok Sukhumvit 4',to:'Suvarnabhumi (BKK)',km:'~30 km',time:'35–45 min at 06:15',mode:'taxi ~THB 450 + tolls'},
+  bkk_maa:{from:'Bangkok BKK',to:'Chennai MAA',km:'~2,200 km',time:'3h 40m',mode:'flight 6E-1062'},
+};
+const ROUTE_GROUPS = [
+  ['Phuket', ['hkt_oldtown','oldtown_romanee','oldtown_rassada','oldtown_chillva','oldtown_khaorang','oldtown_chalong','chalong_bigbuddha','bigbuddha_karon','karon_promthep','promthep_rawai','rawai_oldtown','oldtown_patong','oldtown_kata']],
+  ['Phuket → Krabi', ['phuket_aonang']],
+  ['Krabi / Ao Nang', ['aonang_pier','aonang_kruathara','aonang_railay','aonang_tiger','tiger_krabitown','krabitown_kbv','tiger_kbv','aonang_kbv']],
+  ['Bangkok', ['bkk_sathorn','sathorn_taksin','taksin_thachang','palace_watpho','watpho_arun','arun_yaowarat','yaowarat_sathorn','taksin_iconsiam','sathorn_lumphini','sathorn_soi11','nana_siam','nana_asok','nana_thonglo','soi11_soi4','nana_benjakitti','soi4_bkk']],
+  ['Day trips', ['bkk_maeklong','maeklong_damnoen','bkk_ayutthaya']],
+  ['Flights', ['maa_hkt','kbv_bkk','bkk_maa']],
+];
+
+// events: t = 'HH:MM' (24h) in tz (default Thailand). label overrides display time (e.g. "Morning"). leg = LEGS key.
+const DAYS = [
+  {date:'2026-10-28',title:'Arrive Phuket',base:'Chennai → ibis Styles Phuket City',events:[
+    {t:'06:00',tz:IN,tag:'flight',title:'Be at MAA Terminal 2',det:'Cabin 7 kg only unless you bought baggage. TDAC must already be submitted.'},
+    {t:'08:05',tz:IN,tag:'flight',title:'AK 10 departs MAA → KUL',det:'Lands KUL 14:35 local. PNR <b>OG2QPT</b>.',leg:'maa_hkt'},
+    {t:'14:35',tz:'+08:00',tzLabel:'MYT',tag:'flight',title:'Land KUL Terminal 2',det:'3h 15m layover, same terminal, airside transfer.'},
+    {t:'17:50',tz:'+08:00',tzLabel:'MYT',tag:'flight',title:'AK 826 departs KUL → HKT',det:'40 min flight.'},
+    {t:'18:30',tag:'flight',title:'Land HKT',det:'Immigration + TDAC check. Smart Bus stops ~20:30 — take a Grab / meter taxi.',leg:'hkt_oldtown'},
+    {t:'20:00',tag:'hotel',title:'Check in — ibis Styles Phuket City',det:'Ref <b>QRRSKHVD</b>.'},
+    {t:'20:30',tag:'food',title:'Dinner in Old Town',det:'Soi Romanee + Thalang Road, lit up at night. <b>Tu Kab Khao</b> (southern Thai, book ahead) or <b>One Chun</b> (cheaper). Keep it short.',leg:'oldtown_romanee'},
+  ]},
+  {date:'2026-10-29',title:'Phi Phi Islands',base:'ibis Styles Phuket City',note:'Late October is the tail of the SW monsoon. If the sea is rough, swap for <b>Phang Nga Bay / James Bond Island</b> — sheltered, canoeing through limestone caves.',events:[
+    {t:'07:00',tag:'tour',title:'Hotel pickup — Phi Phi + Maya Bay speedboat',det:'From Rassada Pier. Stops: Maya Bay, Pileh Lagoon, Viking Cave, Monkey Beach, Bamboo Island, snorkelling. THB 1,300–2,500 pp + <b>THB 400 pp park fee in cash</b>.',leg:'oldtown_rassada'},
+    {t:'17:30',tag:'move',title:'Back at Rassada Pier',det:'Hotel by ~18:30.'},
+    {t:'19:30',tag:'food',title:'Evening — Chillva Market (optional)',det:'Container-stall night market, Wed–Sat. Low-key dinner.',leg:'oldtown_chillva'},
+  ]},
+  {date:'2026-10-30',title:'Phuket island day',base:'ibis Styles Phuket City',note:'Skip: Sunday Walking Street (Lard Yai) is Sundays only.',events:[
+    {t:'08:30',label:'Morning',tag:'sight',title:'Old Town on foot',det:'Thalang Road, Soi Romanee, <b>Thai Hua Museum</b> (THB 200), Chinpracha House. Coffee at <b>Bookhemian</b>.'},
+    {t:'11:00',tag:'sight',title:'Khao Rang viewpoint',det:'Walk up or Grab THB 80.',leg:'oldtown_khaorang'},
+    {t:'13:00',tag:'move',title:'Car / Grab for the south loop',det:'~THB 1,500–2,000 for the afternoon.'},
+    {t:'13:30',tag:'sight',title:'Wat Chalong',det:"Phuket's most important temple. Free, modest dress.",leg:'oldtown_chalong'},
+    {t:'14:45',tag:'sight',title:'Big Buddha',det:'45 m marble statue, panoramic views. Free, sarongs provided.',leg:'chalong_bigbuddha'},
+    {t:'16:15',tag:'sight',title:'Karon viewpoint',det:'Over the three bays.',leg:'bigbuddha_karon'},
+    {t:'17:30',tag:'sight',title:'Promthep Cape — sunset',det:'Arrive by 17:30, gets crowded.',leg:'karon_promthep'},
+    {t:'19:00',tag:'food',title:'Dinner — Rawai seafood market',det:'Pick your fish, they cook it. Or <b>Patong / Bangla Road</b> if you want the noise (45 min from hotel, nightlife only).',leg:'promthep_rawai'},
+  ]},
+  {date:'2026-10-31',title:'Phuket → Ao Nang',base:'→ ibis Styles Krabi Ao Nang',events:[
+    {t:'08:00',label:'Morning',tag:'sight',title:'Breakfast, pack. Optional Kata/Karon beach',det:'Only if you start by 08:00 — 30 min each way.',leg:'oldtown_kata'},
+    {t:'12:00',tag:'hotel',title:'Check out — ibis Styles Phuket City'},
+    {t:'12:30',tag:'move',title:'Private transfer departs for Ao Nang',det:'<b>Not yet booked</b> — see To-do. Hotel can arrange, or 12Go.',leg:'phuket_aonang'},
+    {t:'15:30',tag:'hotel',title:'Check in — ibis Styles Krabi Ao Nang',det:'Ref <b>QRRSKLWW</b>. Book tomorrow\'s 4-islands longtail at a beach kiosk this evening.'},
+    {t:'17:00',tag:'sight',title:'Ao Nang beach — sunset',det:'Limestone karsts offshore.',leg:'aonang_pier'},
+    {t:'19:00',tag:'food',title:'Dinner — main strip / Soi Sunset',det:'Seafood alley over the water. <b>Krua Thara</b> in Ao Nam Mao is the local favourite (10-min taxi).',leg:'aonang_kruathara'},
+  ]},
+  {date:'2026-11-01',title:'Krabi islands + Railay',base:'ibis Styles Krabi Ao Nang',alt:'<b>Alternative full day:</b> Hong Islands tour — quieter, Hong Lagoon, more swimming and fewer stops.',events:[
+    {t:'08:30',tag:'tour',title:'Four Islands tour by longtail',det:'Phra Nang Cave Beach, Chicken Island, Tup Island sandbar, Poda Island. Longtail half-day THB 500–900 pp (speedboat full-day 1,200–1,800) <b>+ THB 400 pp park fee</b>. Longtail is slower but nicer.'},
+    {t:'14:00',tag:'tour',title:'Railay by longtail',det:'THB 100 pp each way, boats leave with 8 aboard. Railay West → walk to <b>Phra Nang Beach</b>. Railay viewpoint if you fancy it: steep, muddy, rope-assisted, 30 min.',leg:'aonang_railay'},
+    {t:'17:45',tag:'food',title:'Sunset drinks at Railay West',det:'<b>Last boat back ~18:00–18:30</b> — confirm with your boatman.'},
+  ]},
+  {date:'2026-11-02',title:'Krabi → Bangkok',base:'→ Holiday Inn Express & Suites Sathorn',note:'<b>Risk:</b> Vietjet has a poor on-time record. If VZ345 slips past ~23:30, message the hotel to hold the room. Taxi queues at BKK are fine after midnight.',alt:'<b>No-climb alternative:</b> Krabi Hot Springs + Emerald Pool half-day tour — most end with an airport drop.',events:[
+    {t:'08:00',label:'Morning',tag:'sight',title:'Ao Nang beach, breakfast, repack'},
+    {t:'12:00',tag:'hotel',title:'Check out — bags to reception',det:'Hire car + driver for the afternoon (~THB 2,500–3,000).'},
+    {t:'13:00',tag:'move',title:'Depart Ao Nang',leg:'aonang_tiger'},
+    {t:'13:45',tag:'sight',title:'Tiger Cave Temple (Wat Tham Suea)',det:'1,260 steps to a 360° viewpoint. Allow 2h. Brutal in the heat — carry water.'},
+    {t:'16:30',tag:'food',title:'Krabi Town — Thara Park riverfront, late lunch',leg:'tiger_krabitown'},
+    {t:'18:45',tag:'flight',title:'Arrive KBV',det:'Check in online beforehand with PNR <b>VB4WTE</b>. No baggage included unless bought.',leg:'krabitown_kbv'},
+    {t:'20:45',tag:'flight',title:'VZ345 departs KBV → BKK',det:'Lands 22:10 Suvarnabhumi.',leg:'kbv_bkk'},
+    {t:'22:10',tag:'flight',title:'Land BKK',det:'Public taxi queue at Level 1. Airport Rail Link closes ~midnight — not worth it with bags.',leg:'bkk_sathorn'},
+    {t:'23:20',tag:'hotel',title:'Check in — Holiday Inn Express & Suites Sathorn',det:'193 South Sathon Rd. Ref <b>25348654</b>.'},
+  ]},
+  {date:'2026-11-03',title:'Old City + Chinatown',base:'Holiday Inn Express Sathorn',alt:'<b>Evening swap:</b> Asiatique riverfront or ICONSIAM (free fountain show, excellent food hall) — free shuttle boat from Saphan Taksin.',events:[
+    {t:'08:00',tag:'move',title:'BTS → Saphan Taksin → express boat to Tha Chang',det:'Orange flag, THB 16.',leg:'taksin_thachang'},
+    {t:'08:45',tag:'sight',title:'Grand Palace + Wat Phra Kaew',det:'THB 500 pp, opens 08:30. <b>Strict dress code</b> — shoulders and knees covered, no sheer, closed shoes. Allow 2h. Anyone outside saying it\'s closed is a scam.'},
+    {t:'11:15',tag:'sight',title:'Wat Pho — Reclining Buddha',det:'THB 300 pp. Allow 1h. Traditional massage at the Wat Pho school (THB 480/hr) is the real thing.',leg:'palace_watpho'},
+    {t:'13:00',tag:'food',title:'Lunch near Tha Tien'},
+    {t:'14:00',tag:'sight',title:'Wat Arun',det:'Cross-river ferry THB 5, entry THB 200 pp. Climb the central prang for the river view.',leg:'watpho_arun'},
+    {t:'16:30',tag:'move',title:'Back across, taxi to Yaowarat (Chinatown)',leg:'arun_yaowarat'},
+    {t:'18:00',tag:'food',title:'Chinatown street food',det:'<b>Nai Ek Roll Noodle</b> (peppery pork), <b>Guay Jub Ouan Pochana</b>, Texas Suki grilled seafood stalls, mango sticky rice at <b>Khanom Wan</b>. Cash.'},
+    {t:'21:00',tag:'move',title:'Taxi back to Sathorn',leg:'yaowarat_sathorn'},
+  ]},
+  {date:'2026-11-04',title:'Hotel move + central Bangkok',base:'Sathorn → Holiday Inn Express Sukhumvit 11',events:[
+    {t:'07:00',label:'Morning',tag:'sight',title:'Lumphini Park or Jim Thompson House',det:'Lumphini: 06:00–20:00, free, monitor lizards, 15 min walk. Jim Thompson: BTS National Stadium, THB 200 pp guided tours.',leg:'sathorn_lumphini'},
+    {t:'11:30',tag:'hotel',title:'Check out of Sathorn by 12:00',det:'Taxi to Sukhumvit 11 (~20 min, THB 150), leave bags — check-in is 15:00.',leg:'sathorn_soi11'},
+    {t:'13:00',tag:'sight',title:'Siam shopping belt by BTS',det:'<b>Siam Paragon</b> (eat in the basement food hall), Siam Center, <b>MBK</b>, CentralWorld. <b>Erawan Shrine</b> at Chit Lom.',leg:'nana_siam'},
+    {t:'16:30',tag:'hotel',title:'Check in — Holiday Inn Express Sukhumvit 11',det:'30 Sukhumvit Soi 11. Ref <b>84021615</b>.'},
+    {t:'17:30',tag:'sight',title:'Terminal 21 (BTS Asok)',det:'Each floor a different city; food court on 5.',leg:'nana_asok'},
+    {t:'19:30',tag:'food',title:'Rooftop — Octave, Marriott Sukhumvit 57',det:'Three-level 360° rooftop, no reservation, smart casual (no shorts / flip-flops for men). Alt: Vertigo & Moon Bar at Banyan Tree Sathorn. Soi 11 bars for a late one.',leg:'nana_thonglo'},
+  ]},
+  {date:'2026-11-05',title:'Day trip + hotel hop',base:'Sukhumvit 11 → ibis Bangkok Sukhumvit 4',note:'Chatuchak Weekend Market is <b>closed on Thursdays</b>. Whatever you pick, be back by 21:00 and pack — early flight.',alt:'<b>Option B — Ayutthaya:</b> UNESCO ruins, Buddha head at Wat Mahathat, Wat Chaiwatthanaram at sunset. Tour THB 1,200–2,000 pp or train from Krung Thep Aphiwat (~1.5h) + bicycles. Longer and hotter.<br><br><b>Option C — slow day:</b> massage, Benjakitti Park, Terminal 21, early dinner, one drink on Khao San Road, pack properly.',events:[
+    {t:'06:15',tag:'hotel',title:'Bags to ibis Sukhumvit 4 reception',det:'8-min walk from Soi 11. Check-in 14:00. Ref <b>QSJSCXZS</b>.',leg:'soi11_soi4'},
+    {t:'06:30',tag:'tour',title:'Option A — Maeklong Railway Market + Damnoen Saduak (recommended)',det:'Joined tour THB 1,200–1,800 pp, back ~14:00. Maeklong stalls fold away as the train passes. Damnoen paddle-boat ~THB 300 extra.',leg:'bkk_maeklong'},
+    {t:'14:30',tag:'hotel',title:'Check in — ibis Bangkok Sukhumvit 4',det:'41 Sukhumvit Soi 4. Arrange tomorrow\'s 06:15 taxi with reception now.'},
+    {t:'15:30',tag:'sight',title:'Thai massage, Benjakitti Park',det:'Lake and skywalk, 10 min from Nana.',leg:'nana_benjakitti'},
+    {t:'17:30',tag:'sight',title:'ICONSIAM at sunset',det:'Free shuttle boat from Saphan Taksin.',leg:'taksin_iconsiam'},
+    {t:'21:00',tag:'hotel',title:'Back at hotel — pack',det:'Flight is early. Check in online for 6E-1062, PNR <b>NEEGFQ</b>.'},
+  ]},
+  {date:'2026-11-06',title:'Fly home',base:'ibis Bangkok Sukhumvit 4 → Chennai',note:'VAT refund: P.P.10 stamped at customs <b>before</b> check-in, claim after immigration. +30 min.',events:[
+    {t:'05:45',tag:'hotel',title:'Wake',det:'Breakfast starts ~06:00 — probably a 7-Eleven coffee.'},
+    {t:'06:15',tag:'move',title:'Taxi to BKK',det:'Light traffic, 35–45 min. ~THB 450 + tolls.',leg:'soi4_bkk'},
+    {t:'07:15',tag:'flight',title:'Arrive BKK — Row E/F for IndiGo',det:'International check-in closes 60 min before departure. 20 kg + 7 kg allowed.'},
+    {t:'10:15',tag:'flight',title:'6E-1062 departs BKK → MAA',det:'PNR <b>NEEGFQ</b>.',leg:'bkk_maa'},
+    {t:'12:25',tz:IN,tag:'flight',title:'Land MAA Terminal 2',det:'Home.'},
+  ]},
+];
+
+const TCATS = [
+  {id:'booking',name:'Bookings',color:'#1d4ed8'},{id:'docs',name:'Documents',color:'#7c3aed'},
+  {id:'money',name:'Money',color:'#15803d'},{id:'packing',name:'Packing',color:'#a16207'},
+  {id:'ontrip',name:'During trip',color:'#c2410c'},{id:'other',name:'Other',color:'#475569'},
+];
+const BEFORE='before';
+const SEED_TASKS = [
+  {id:'bag_airasia',cat:'booking',due:BEFORE,text:'Baggage — AirAsia MAA→KUL→HKT: add 20 kg via app/site (~₹1,800–2,500 pp now; ₹5,000+ at airport). Or commit to cabin-only.'},
+  {id:'bag_vietjet',cat:'booking',due:BEFORE,text:'Baggage — Thai Vietjet KBV→BKK: add 20 kg on Vietjet site with PNR VB4WTE (~THB 500–700 online).'},
+  {id:'transfer',cat:'booking',due:'2026-10-30',text:'Book Phuket → Ao Nang private transfer for 31 Oct ~12:30 pickup (THB 2,800–3,500 for 2). Hotel or 12Go. If ferry instead, confirm it is running.'},
+  {id:'krabi_car',cat:'booking',due:'2026-11-01',text:'Book Krabi car + driver for 2 Nov afternoon (~THB 2,500–3,000): Tiger Cave → Krabi Town → KBV.'},
+  {id:'tdac',cat:'docs',due:BEFORE,text:'Thailand Digital Arrival Card — submit within 72h before 28 Oct at tdac.immigration.go.th. Free, one per traveller.'},
+  {id:'passport',cat:'docs',due:BEFORE,text:'Passports 6+ months valid from 28 Oct 2026; carry onward ticket + proof of funds.'},
+  {id:'kul',cat:'docs',due:BEFORE,text:'Verify KUL transfer is airside on the single AirAsia PNR (no Malaysian visa).'},
+  {id:'esim',cat:'other',due:BEFORE,text:'Buy tourist eSIM (AIS / dtac, ~THB 300–500).'},
+  {id:'phiphi',cat:'booking',due:'2026-10-28',text:'Book Phi Phi tour for 29 Oct (or hold until 28 Oct evening to check sea conditions).'},
+  {id:'temple_dress',cat:'packing',due:BEFORE,text:'Pack long trousers + scarf for Grand Palace / Wat Pho.'},
+  {id:'vietjet_reconfirm',cat:'ontrip',due:'2026-11-01',text:'Reconfirm VZ345 24h before and check in online.'},
+  {id:'cash',cat:'money',due:'2026-10-28',text:'THB cash — withdraw big once (ATM fee THB 220); carry 8,000–10,000.'},
+];
+
+// ---------- Helpers ----------
+const $ = s=>document.querySelector(s);
+const params = new URLSearchParams(location.search);
+const SIM = params.get('now') ? new Date(params.get('now') + (params.get('now').length<=16 ? ':00' : '') + TH) : null;
+const now = ()=> SIM ? new Date(SIM.getTime() + (Date.now()-pageLoad)) : new Date();
+const pageLoad = Date.now();
+
+let EVENTS = [];
+DAYS.forEach((d,di)=>d.events.forEach((e,ei)=>{
+  e.tz = e.tz||TH; e.start = new Date(`${d.date}T${e.t}:00${e.tz}`); e.id=`ev-${di}-${ei}`; e.day=d;
+  e.tzLabel = e.tzLabel || (e.tz===IN?'IST':'ICT'); EVENTS.push(e);
+}));
+EVENTS.sort((a,b)=>a.start-b.start);
+const tripStart = EVENTS[0].start, tripEnd = EVENTS[EVENTS.length-1].start;
+
+function dayBounds(d){ return [new Date(`${d.date}T00:00:00${TH}`), new Date(`${d.date}T23:59:59${TH}`)]; }
+function fmtDate(d){ return new Date(d+'T12:00:00'+TH).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'Asia/Bangkok'}); }
+function fmtDur(ms){ const neg=ms<0; ms=Math.abs(ms); const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+  return (neg?'-':'')+(d?`${d}d `:'')+(d||h?`${h}h `:'')+`${m}m`; }
+function mapLink(leg){ return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(leg.from)}&destination=${encodeURIComponent(leg.to)}`; }
+function legHtml(k){ const l=LEGS[k]; if(!l) return ''; return `<div class="leg">↳ ${l.from} → ${l.to}: <b>${l.km}</b>, ${l.time} · ${l.mode} · <a href="${mapLink(l)}" target="_blank" rel="noopener">Map</a></div>`; }
+
+function state(){
+  const n=now(); let cur=null,next=null;
+  for(const e of EVENTS){ if(e.start<=n) cur=e; else { next=e; break; } }
+  // a "current" event only counts if it's on the same day as now (don't carry yesterday's last event over)
+  if(cur && next && cur.day!==next.day && n > dayBounds(cur.day)[1]) cur=null;
+  return {n,cur,next};
+}
+
+// ---------- Render ----------
+function renderDays(){
+  const {n,cur,next}=state(); const hidePast=$('#hidePast').checked;
+  $('#days').innerHTML = DAYS.map(d=>{
+    const [s,e]=dayBounds(d); const isToday=n>=s&&n<=e, isPast=n>e;
+    if(hidePast&&isPast) return '';
+    const evs=d.events.map(ev=>{
+      const cls=['ev', ev===cur?'now':'', ev===next?'next':'', (ev.start<n&&ev!==cur)?'past':''].join(' ');
+      const flag = ev===cur?'<span class="flag">Now</span>':ev===next?'<span class="flag">Next</span>':'';
+      const tzs = ev.tz!==TH?`<small>${ev.tzLabel}</small>`:'';
+      return `<div class="${cls}" id="${ev.id}">
+        <div class="time">${ev.label||ev.t}${tzs}</div>
+        <div><span class="pill" style="background:var(--${ev.tag})">${TAGS[ev.tag]}</span> <span class="ttl">${ev.title}</span>
+          ${ev.det?`<div class="det">${ev.det}</div>`:''}${ev.leg?legHtml(ev.leg):''}</div>${flag}</div>`;
+    }).join('');
+    return `<div class="day"><div class="dayhead ${isToday?'today':isPast?'past':''}"><h2>${fmtDate(d.date)} — ${d.title}</h2><span class="base">${d.base}</span></div>
+      <div class="card" style="padding:4px 8px">${evs}${d.note?`<div class="daynote">${d.note}</div>`:''}${d.alt?`<div class="alt">${d.alt}</div>`:''}</div></div>`;
+  }).join('');
+}
+
+function renderStatus(){
+  const {n,cur,next}=state(); let html='';
+  if(n<tripStart) html=`<div class="box next-box"><div class="label" style="color:var(--next)">Trip starts in</div><div class="title countdown">${fmtDur(tripStart-n)}</div><div class="small muted">${EVENTS[0].title} · ${fmtDate(DAYS[0].date)} ${EVENTS[0].t} ${EVENTS[0].tzLabel}</div></div>
+    <div class="box" style="background:var(--accent-soft)"><div class="label" style="color:var(--accent)">Open items</div><div class="title" id="openCount"></div><div class="small muted">See the To-do tab.</div></div>`;
+  else if(n>tripEnd) html=`<div class="box now-box"><div class="label" style="color:var(--now)">Trip complete</div><div class="title">Welcome home.</div></div>`;
+  else {
+    const spent = `<div class="small" style="margin-top:4px">Spent today: <b>${thb(spentToday())}</b> · <a href="#" data-goto="expenses">add</a></div>`;
+    html += cur?`<div class="box now-box"><div class="label" style="color:var(--now)">Now · ${cur.day.title}</div><div class="title">${cur.title}</div><div class="small muted">since ${cur.t} ${cur.tzLabel} · ${cur.day.base}</div>${spent}</div>`
+               :`<div class="box now-box"><div class="label" style="color:var(--now)">Now</div><div class="title">Nothing scheduled</div><div class="small muted">${next?next.day.base:''}</div>${spent}</div>`;
+    html += next?`<div class="box next-box"><div class="label" style="color:var(--next)">Next · in <span class="countdown">${fmtDur(next.start-n)}</span></div><div class="title">${next.title}</div><div class="small muted">${fmtDate(next.day.date)} ${next.t} ${next.tzLabel}${next.leg?` · ${LEGS[next.leg].km}, ${LEGS[next.leg].time}`:''}</div>${next.leg?`<a class="small" href="${mapLink(LEGS[next.leg])}" target="_blank" rel="noopener">Directions ↗</a>`:''}</div>`:'';
+  }
+  $('#status').innerHTML=html;
+  const oc=$('#openCount'); if(oc){ const t=loadT(); oc.textContent=`${t.filter(x=>!x.done).length} of ${t.length} to do`; }
+}
+
+function renderRoutes(){
+  $('#routes').innerHTML = ROUTE_GROUPS.map(([name,keys])=>`<div class="route-grp"><h3>${name}</h3><table><thead><tr><th>From</th><th>To</th><th>Distance</th><th>Time</th><th>How</th><th></th></tr></thead><tbody>`+
+    keys.map(k=>{const l=LEGS[k];return `<tr><td>${l.from}</td><td>${l.to}</td><td><b>${l.km}</b></td><td>${l.time}</td><td class="muted">${l.mode}</td><td><a class="mapbtn" href="${mapLink(l)}" target="_blank" rel="noopener">Map</a></td></tr>`;}).join('')+`</tbody></table></div>`).join('');
+}
+
+// ---------- Tasks ----------
+const esc = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tcatOf = id => TCATS.find(c=>c.id===id) || TCATS[TCATS.length-1];
+const saveT = t => localStorage.setItem('tasks', JSON.stringify(t));
+function loadT(){
+  const raw=localStorage.getItem('tasks'); if(raw){ try{ return JSON.parse(raw); }catch{} }
+  // first run: seed from defaults, honouring ticks from the old checklist
+  const t=SEED_TASKS.map(s=>({...s, done:!!localStorage.getItem('chk_'+s.id), ts:Date.now()})); saveT(t); return t;
+}
+let tFilter='all', tShowDone={}, tEditing=null;
+const dueOptions = ()=>`<option value="">No date</option><option value="${BEFORE}">Before trip</option>`+DAYS.map(d=>`<option value="${d.date}">${fmtDate(d.date)}</option>`).join('');
+function dueLabel(due){ return due===BEFORE?'Before trip':due?fmtDate(due):''; }
+function dueClass(task){ if(!task.due||task.done) return ''; const n=now();
+  if(task.due===BEFORE) return n>=tripStart?'late':(tripStart-n<2*864e5?'soon':'');
+  const [s,e]=dayBounds({date:task.due}); return n>e?'late':n>=s||(s-n<864e5)?'soon':''; }
+const dueSort = d => d===''?'9999':d===BEFORE?'0000':d;
+
+function initTaskForm(){
+  $('#tCat').innerHTML = TCATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  $('#tDue').innerHTML = dueOptions();
+  $('#tform').onsubmit = e=>{ e.preventDefault(); const text=$('#tText').value.trim(); if(!text) return;
+    const t=loadT(); t.push({id:Date.now().toString(36),text,cat:$('#tCat').value,due:$('#tDue').value,done:false,ts:Date.now()}); saveT(t);
+    $('#tText').value=''; renderTasks(); renderStatus(); $('#tText').focus(); };
+  $('#tClearDone').onclick = ()=>{ const t=loadT(), n=t.filter(x=>x.done).length; if(n&&confirm(`Remove ${n} completed task${n>1?'s':''}?`)){ saveT(t.filter(x=>!x.done)); renderTasks(); renderStatus(); } };
+  $('#tReseed').onclick = ()=>{ const t=loadT(), ids=new Set(t.map(x=>x.id)); let added=0; SEED_TASKS.forEach(s=>{ if(!ids.has(s.id)){ t.push({...s,done:false,ts:Date.now()}); added++; } }); saveT(t); renderTasks(); renderStatus(); alert(added?`Added ${added} default task${added>1?'s':''}.`:'All default tasks are already present.'); };
+  $('#tFilter').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; tFilter=b.dataset.f; renderTasks(); };
+  $('#tasks').addEventListener('click', onTaskClick);
+  $('#tasks').addEventListener('keydown', e=>{ if(!e.target.closest('.tedit')) return;
+    if(e.key==='Enter'){ e.preventDefault(); e.target.closest('.tedit').querySelector('[data-act=save]').click(); }
+    else if(e.key==='Escape'){ tEditing=null; renderTasks(); } });
+  $('#tasks').addEventListener('change', e=>{ const cb=e.target.closest('input[type=checkbox]'); if(!cb) return;
+    const t=loadT(), it=t.find(x=>x.id===cb.dataset.id); if(it){ it.done=cb.checked; saveT(t); renderTasks(); renderStatus(); } });
+}
+function onTaskClick(e){
+  const el=e.target.closest('[data-act]'); if(!el) return; const act=el.dataset.act, id=el.dataset.id;
+  if(act==='edit'){ tEditing=id; renderTasks(); setTimeout(()=>{ const i=$('#tasks .tedit input'); if(i){ i.focus(); i.setSelectionRange(i.value.length,i.value.length); } }); }
+  else if(act==='cancel'){ tEditing=null; renderTasks(); }
+  else if(act==='save'){ const t=loadT(), it=t.find(x=>x.id===id); const wrap=el.closest('.tedit');
+    const text=wrap.querySelector('input').value.trim(); if(it&&text){ it.text=text; it.cat=wrap.querySelector('.ecat').value; it.due=wrap.querySelector('.edue').value; saveT(t); } tEditing=null; renderTasks(); }
+  else if(act==='del'){ const t=loadT(), it=t.find(x=>x.id===id); if(it&&confirm(`Delete "${it.text.slice(0,60)}${it.text.length>60?'…':''}"?`)){ saveT(t.filter(x=>x.id!==id)); renderTasks(); renderStatus(); } }
+  else if(act==='toggledone'){ tShowDone[id]=!tShowDone[id]; renderTasks(); }
+}
+function taskRow(x){
+  if(tEditing===x.id) return `<div class="task editing"><div class="tedit">
+    <input type="text" value="${esc(x.text)}" maxlength="200">
+    <div class="row"><select class="ecat">${TCATS.map(c=>`<option value="${c.id}" ${c.id===x.cat?'selected':''}>${c.name}</option>`).join('')}</select>
+      <select class="edue">${dueOptions()}</select>
+      <button class="primary" data-act="save" data-id="${x.id}">Save</button><button data-act="cancel" data-id="${x.id}">Cancel</button></div></div></div>`;
+  const c=tcatOf(x.cat), dc=dueClass(x);
+  return `<div class="task ${x.done?'done':''}"><input type="checkbox" data-id="${x.id}" ${x.done?'checked':''}>
+    <div><div class="txt" data-act="edit" data-id="${x.id}">${esc(x.text)}</div>
+      <div class="meta">${tFilter==='all'?`<span class="pill" style="background:${c.color}">${c.name}</span>`:''}${x.due?`<span class="due ${dc}">${dc==='late'?'Overdue · ':''}${dueLabel(x.due)}</span>`:''}</div></div>
+    <div class="acts"><button data-act="edit" data-id="${x.id}" title="Edit">✎</button><button data-act="del" data-id="${x.id}" title="Delete">×</button></div></div>`;
+}
+function renderTasks(){
+  const all=loadT(), done=all.filter(x=>x.done).length;
+  $('#tCount').textContent=`${done} / ${all.length} done`; $('#tBar').style.width=(all.length?done/all.length*100:0)+'%';
+  const cnt=id=>all.filter(x=>!x.done&&(id==='all'||x.cat===id)).length;
+  $('#tFilter').innerHTML=[`<button data-f="all" class="${tFilter==='all'?'active':''}">All <span class="muted">${cnt('all')}</span></button>`,
+    ...TCATS.map(c=>`<button data-f="${c.id}" class="${tFilter===c.id?'active':''}"><i style="background:${c.color}"></i>${c.name} <span class="muted">${cnt(c.id)}</span></button>`)].join('');
+  const sortT=(a,b)=>dueSort(a.due||'').localeCompare(dueSort(b.due||''))||a.ts-b.ts;
+  const groups = tFilter==='all' ? TCATS.map(c=>[c, all.filter(x=>x.cat===c.id)]).filter(([,l])=>l.length) : [[tcatOf(tFilter), all.filter(x=>x.cat===tFilter)]];
+  $('#tasks').innerHTML = all.length ? groups.map(([c,list])=>{ const open=list.filter(x=>!x.done).sort(sortT), fin=list.filter(x=>x.done).sort(sortT);
+    return `<div class="tgroup"><h3><i style="width:10px;height:10px;border-radius:50%;background:${c.color};display:inline-block"></i>${c.name} <span class="cnt">${open.length} open</span></h3>
+      ${open.map(taskRow).join('')||'<div class="small muted" style="padding:6px 0">Nothing open.</div>'}
+      ${fin.length?`<button class="tdone-toggle" data-act="toggledone" data-id="${c.id}">${tShowDone[c.id]?'▾':'▸'} ${fin.length} completed</button>${tShowDone[c.id]?fin.map(taskRow).join(''):''}`:''}</div>`; }).join('')
+    : `<div class="emptymsg">No tasks. Add one above or re-add the default gaps.</div>`;
+  if(tEditing){ const it=all.find(x=>x.id===tEditing); const s=$('#tasks .tedit .edue'); if(it&&s) s.value=it.due||''; }
+}
+
+// ---------- Expenses ----------
+const RATE = 2.85, BUDGET_THB = [43000, 53000];
+const XCATS = [
+  {id:'food',name:'Food & drink',color:'#c2410c'},{id:'transport',name:'Transport',color:'#475569'},
+  {id:'tours',name:'Tours & entry',color:'#15803d'},{id:'hotel',name:'Hotel',color:'#0e7490'},
+  {id:'shopping',name:'Shopping',color:'#7c3aed'},{id:'wellness',name:'Massage & bars',color:'#be185d'},
+  {id:'other',name:'Other',color:'#a16207'},
+];
+const catOf = id => XCATS.find(c=>c.id===id) || XCATS[XCATS.length-1];
+const loadX = ()=>{ try{ return JSON.parse(localStorage.getItem('expenses')||'[]'); }catch{ return []; } };
+const saveX = x => localStorage.setItem('expenses', JSON.stringify(x));
+const thb = n => 'THB ' + Math.round(n).toLocaleString('en-IN');
+const inr = n => '₹' + Math.round(n*RATE).toLocaleString('en-IN');
+let xCur='THB', xCat='food';
+
+function todayKey(){ const n=now(); const d=DAYS.find(d=>{const [s,e]=dayBounds(d); return n>=s&&n<=e;}); return d ? d.date : (n<tripStart ? DAYS[0].date : DAYS[DAYS.length-1].date); }
+
+function initExpenseForm(){
+  $('#xCats').innerHTML = XCATS.map(c=>`<button type="button" data-cat="${c.id}" class="${c.id===xCat?'active':''}"><i style="background:${c.color}"></i>${c.name}</button>`).join('');
+  $('#xCats').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; xCat=b.dataset.cat; $('#xCats').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); };
+  $('#xCur').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; xCur=b.dataset.cur; $('#xCur').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); updConv(); };
+  $('#xDay').innerHTML = DAYS.map(d=>`<option value="${d.date}">${fmtDate(d.date)}</option>`).join('');
+  $('#xDay').value = todayKey();
+  $('#xAmt').oninput = updConv;
+  $('#xform').onsubmit = e=>{ e.preventDefault(); const v=parseFloat($('#xAmt').value); if(!(v>0)) return;
+    const x=loadX(); x.push({id:Date.now().toString(36), date:$('#xDay').value, cat:xCat, thb: xCur==='THB'?v:v/RATE, note:$('#xNote').value.trim(), ts:Date.now()});
+    saveX(x); $('#xAmt').value=''; $('#xNote').value=''; updConv(); renderExpenses(); renderStatus(); $('#xAmt').focus(); };
+  $('#xExport').onclick = ()=>{ const rows=[['date','category','thb','inr','note'],...loadX().sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts).map(x=>[x.date,catOf(x.cat).name,x.thb.toFixed(2),(x.thb*RATE).toFixed(0),(x.note||'').replace(/"/g,'""')])];
+    download('thailand-expenses.csv','text/csv', rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n')); };
+  $('#xBackup').onclick = ()=>download('thailand-trip-backup.json','application/json', JSON.stringify({expenses:loadX(),tasks:loadT()},null,1));
+  $('#xRestore').onchange = e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ const d=JSON.parse(t);
+    const exp=Array.isArray(d)?d:d.expenses||[], tasks=Array.isArray(d)?[]:d.tasks||[];
+    const cur=loadX(), ids=new Set(cur.map(x=>x.id)); exp.forEach(x=>{ if(x.id&&x.date&&x.thb>0&&!ids.has(x.id)) cur.push(x); }); saveX(cur);
+    const ct=loadT(), tids=new Set(ct.map(x=>x.id)); tasks.forEach(x=>{ if(x.id&&x.text&&!tids.has(x.id)) ct.push(x); }); saveT(ct);
+    renderExpenses(); renderTasks(); renderStatus(); alert(`Restored. ${cur.length} expenses, ${ct.length} tasks total.`); }).catch(()=>alert('Could not read that file.')); e.target.value=''; };
+}
+function updConv(){ const v=parseFloat($('#xAmt').value); $('#xConv').textContent = v>0 ? (xCur==='THB' ? '≈ '+inr(v) : '≈ '+thb(v/RATE)) : ''; }
+function download(name,type,content){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type})); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); }
+function stackBar(byCat,total){ if(!total) return ''; return `<div class="bar-stack">${XCATS.filter(c=>byCat[c.id]).map(c=>`<span style="width:${byCat[c.id]/total*100}%;background:${c.color}" title="${c.name}"></span>`).join('')}</div>
+  <div class="legend">${XCATS.filter(c=>byCat[c.id]).sort((a,b)=>byCat[b.id]-byCat[a.id]).map(c=>`<span><i style="background:${c.color}"></i>${c.name} ${thb(byCat[c.id])} (${Math.round(byCat[c.id]/total*100)}%)</span>`).join('')}</div>`; }
+function sumByCat(list){ const m={}; list.forEach(x=>m[x.cat]=(m[x.cat]||0)+x.thb); return m; }
+
+function renderExpenses(){
+  const all=loadX(); const total=all.reduce((s,x)=>s+x.thb,0);
+  const daysWith=new Set(all.map(x=>x.date)).size; const n=now();
+  const elapsed = Math.max(1, Math.min(DAYS.length, Math.floor((n - dayBounds(DAYS[0])[0])/864e5)+1));
+  const perDay = total/(n<tripStart?1:elapsed);
+  const pct = total/BUDGET_THB[1]*100;
+  $('#xGrand').innerHTML = all.length ? `
+    <div class="grand">
+      <div class="kpi"><div class="label">Grand total</div><div class="val">${thb(total)}</div><div class="sub">${inr(total)}</div></div>
+      <div class="kpi"><div class="label">Per day</div><div class="val">${thb(perDay)}</div><div class="sub">${n<tripStart?'trip not started':`over ${elapsed} day${elapsed>1?'s':''}`} · ${daysWith} with entries</div></div>
+      <div class="kpi"><div class="label">Entries</div><div class="val">${all.length}</div><div class="sub">largest ${thb(Math.max(...all.map(x=>x.thb)))}</div></div>
+    </div>
+    <div class="small muted" style="margin-top:12px">Against the THB ${BUDGET_THB[0].toLocaleString()}–${BUDGET_THB[1].toLocaleString()} spending estimate: <b>${Math.round(pct)}%</b> of the upper bound${total>BUDGET_THB[1]?' — <b>over budget</b>':total>BUDGET_THB[0]?' — past the lower bound':''}</div>
+    <div class="budget-bar ${total>BUDGET_THB[1]?'over':''}"><span style="width:${Math.min(100,pct)}%"></span></div>
+    <h3>By category</h3>${stackBar(sumByCat(all),total)}` : `<div class="emptymsg">No expenses yet. Add the first one above.</div>`;
+
+  const byDay={}; all.forEach(x=>(byDay[x.date]=byDay[x.date]||[]).push(x));
+  const dates=[...new Set([...DAYS.map(d=>d.date),...Object.keys(byDay)])].filter(d=>byDay[d]).sort().reverse();
+  const tk=todayKey();
+  $('#xDays').innerHTML = dates.map(date=>{ const list=byDay[date].sort((a,b)=>b.ts-a.ts); const t=list.reduce((s,x)=>s+x.thb,0); const day=DAYS.find(d=>d.date===date);
+    return `<div class="card xday"><div class="hd"><h3>${fmtDate(date)}${day?` — ${day.title}`:''}${date===tk?' <span class="pill" style="background:var(--now)">Today</span>':''}</h3><div class="tot">${thb(t)} <small>${inr(t)} · ${list.length} item${list.length>1?'s':''}</small></div></div>
+      ${stackBar(sumByCat(list),t)}
+      <details ${date===tk?'open':''}><summary>Items</summary>${list.map(x=>{const c=catOf(x.cat);return `<div class="xitem"><span class="cat" style="background:${c.color}">${c.name}</span><span class="note">${x.note||'<span class="muted">—</span>'}<small>${new Date(x.ts).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bangkok'})}</small></span><span class="amt">${thb(x.thb)}<small>${inr(x.thb)}</small></span><button class="del" data-id="${x.id}" title="Delete">×</button></div>`;}).join('')}</details></div>`; }).join('');
+  $('#xDays').querySelectorAll('.del').forEach(b=>b.onclick=()=>{ const x=loadX(); const it=x.find(e=>e.id===b.dataset.id); if(it&&confirm(`Delete ${thb(it.thb)}${it.note?' — '+it.note:''}?`)){ saveX(x.filter(e=>e.id!==b.dataset.id)); renderExpenses(); renderStatus(); } });
+}
+function spentToday(){ const tk=todayKey(); return loadX().filter(x=>x.date===tk).reduce((s,x)=>s+x.thb,0); }
+
+function renderClock(){
+  const n=now();
+  const th=n.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bangkok'});
+  const ist=n.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Kolkata'});
+  $('#clock').textContent=`Thailand ${th} · India ${ist}`;
+}
+
+function jumpNow(){
+  const {cur,next}=state(); const t=cur||next; if(!t) return;
+  $('#nav button[data-tab="plan"]').click();
+  const el=document.getElementById(t.id); if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// ---------- Wire up ----------
+function showTab(tab){
+  document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id==='tab-'+tab)); window.scrollTo({top:0}); }
+$('#nav').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) showTab(b.dataset.tab); });
+$('#status').addEventListener('click',e=>{ const a=e.target.closest('[data-goto]'); if(a){ e.preventDefault(); showTab(a.dataset.goto); $('#xAmt').focus(); } });
+$('#hidePast').onchange=renderDays;
+$('#jumpNow').onclick=jumpNow;
+$('#thb').oninput=e=>{ $('#inr').textContent='₹'+Math.round((+e.target.value||0)*2.85).toLocaleString('en-IN'); };
+if(SIM) $('#simNote').textContent=`Simulated time: ${SIM.toLocaleString('en-GB',{timeZone:'Asia/Bangkok'})} ICT`;
+
+function tick(){ renderClock(); renderStatus(); renderDays(); }
+renderRoutes(); initTaskForm(); renderTasks(); initExpenseForm(); renderExpenses(); tick();
+setInterval(tick, 30000);
+const {n}=state(); if(n>=tripStart&&n<=tripEnd) setTimeout(jumpNow,150);
+</script>
 </body>
 </html>
